@@ -1,0 +1,288 @@
+{
+  "info": {
+    "name": "Mezna Store API",
+    "description": "مجموعة كاملة لجميع APIs متجر Mezna Store.\n\nالمتغيرات:\n- base_url: عنوان السيرفر (مثال: https://your-domain.com)\n- token: يُملأ تلقائياً بعد تسجيل الدخول (Login) ويُستخدم في الطلبات المحمية.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "base_url", "value": "https://mezna-store.com" },
+    { "key": "token", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Auth (المصادقة)",
+      "item": [
+        {
+          "name": "Login - تسجيل الدخول",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@example.com\",\n  \"password\": \"password\"\n}"
+            },
+            "url": "{{base_url}}/api/auth/login",
+            "description": "يرجع access_token — انسخه إلى المتغير token لاستخدامه في الطلبات المحمية."
+          }
+        },
+        {
+          "name": "Register - تسجيل مستخدم جديد",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"User\",\n  \"email\": \"user@example.com\",\n  \"password\": \"password\",\n  \"password_confirmation\": \"password\"\n}"
+            },
+            "url": "{{base_url}}/api/auth/register",
+            "description": "يحتاج password_confirmation مطابق لـ password."
+          }
+        },
+        {
+          "name": "Logout - تسجيل الخروج",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/api/auth/logout",
+            "description": "يتطلب مصادقة (Bearer token)."
+          }
+        },
+        {
+          "name": "User - المستخدم الحالي",
+          "request": {
+            "method": "GET",
+            "header": [
+              { "key": "Accept", "value": "application/json" },
+              { "key": "Authorization", "value": "Bearer {{token}}" }
+            ],
+            "url": "{{base_url}}/api/auth/user",
+            "description": "جلب بيانات المستخدم المسجل دخوله. يتطلب مصادقة."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Products (المنتجات)",
+      "item": [
+        {
+          "name": "List Products - قائمة المنتجات",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{base_url}}/api/products?category_id=&search=",
+              "host": ["{{base_url}}"],
+              "path": ["api", "products"],
+              "query": [
+                { "key": "category_id", "value": "", "description": "فلترة حسب القسم" },
+                { "key": "search", "value": "", "description": "بحث في الاسم" }
+              ]
+            },
+            "description": "قائمة منجمة من المنتجات. كل عنصر يتضمن visits_count (عدد المشاهدات)."
+          }
+        },
+        {
+          "name": "Show Product - عرض منتج",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/products/1",
+            "description": "استبدل 1 بمعرف المنتج. يرجع التفاصيل مع القسم والمتغيرات وعدد المشاهدات (visits_count)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Categories (الأقسام)",
+      "item": [
+        {
+          "name": "List Categories - قائمة الأقسام",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{base_url}}/api/categories?search=",
+              "host": ["{{base_url}}"],
+              "path": ["api", "categories"],
+              "query": [
+                { "key": "search", "value": "", "description": "بحث في الاسم" }
+              ]
+            },
+            "description": "قائمة الأقسام. كل قسم يتضمن visits_count و products_count و banners_count. الأقسام التي فيها hide_price لا تعرض سعر المنتجات عند عرض القسم."
+          }
+        },
+        {
+          "name": "Show Category - عرض قسم",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/categories/1",
+            "description": "استبدل 1 بمعرف القسم. يرجع القسم مع المنتجات والبانرات وعدد المشاهدات (visits_count) للقسم ولكل منتج."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Banners (البانرات)",
+      "item": [
+        {
+          "name": "List Banners - قائمة البانرات",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{base_url}}/api/banners?category_id=",
+              "host": ["{{base_url}}"],
+              "path": ["api", "banners"],
+              "query": [
+                { "key": "category_id", "value": "", "description": "فلترة حسب القسم" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Main Page Banners - بانرات الصفحة الرئيسية",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/banners/main-page",
+            "description": "بانرات بدون ربط بقسم (للصفحة الرئيسية)."
+          }
+        },
+        {
+          "name": "Show Banner - عرض بانر",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/banners/1",
+            "description": "استبدل 1 بمعرف البانر."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Page Contents (محتوى الصفحات + SEO)",
+      "item": [
+        {
+          "name": "Get All - جلب كل المحتوى",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": {
+              "raw": "{{base_url}}/api/page-contents?keys=shipping,returns,faq,meta_pixel_id,home",
+              "host": ["{{base_url}}"],
+              "path": ["api", "page-contents"],
+              "query": [
+                { "key": "keys", "value": "shipping,returns,faq,meta_pixel_id,home", "description": "مفاتيح مفصولة بفاصلة" }
+              ]
+            },
+            "description": "يرجع لكل مفتاح: content و seo (title, meta_description, meta_keywords, og_*)."
+          }
+        },
+        {
+          "name": "Get Shipping - الشحن",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/page-contents/shipping",
+            "description": "نص صفحة الشحن + إعدادات SEO."
+          }
+        },
+        {
+          "name": "Get Returns - الاسترجاع",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/page-contents/returns"
+          }
+        },
+        {
+          "name": "Get FAQ - الأسئلة الشائعة",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/page-contents/faq"
+          }
+        },
+        {
+          "name": "Get Meta Pixel ID - معرف بيكسل ميتا",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/page-contents/meta_pixel_id",
+            "description": "لربط إعلانات فيسبوك/ميتا. يرجع content = معرف البيكسل و seo إن وُجد."
+          }
+        },
+        {
+          "name": "Get Home (SEO) - الصفحة الرئيسية",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/page-contents/home",
+            "description": "إعدادات SEO للصفحة الرئيسية (title, meta, og)."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Hero Slides (صور الهيرو / الكاروسيل)",
+      "item": [
+        {
+          "name": "Get Hero Slides - صور الهيرو",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/hero-slides",
+            "description": "صور مفعلة بترتيب عشوائي (للكاروسيل في بداية الموقع). كل عنصر: id, image, alt_text, caption, sort_order."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Visits (تسجيل الزيارات)",
+      "item": [
+        {
+          "name": "Record Visit - قسم",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"category\",\n  \"id\": 1\n}"
+            },
+            "url": "{{base_url}}/api/visits",
+            "description": "تسجيل زيارة قسم. استبدل id بمعرف القسم. اختياري: city, country, country_name."
+          }
+        },
+        {
+          "name": "Record Visit - منتج",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Content-Type", "value": "application/json" },
+              { "key": "Accept", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"type\": \"product\",\n  \"id\": 1\n}"
+            },
+            "url": "{{base_url}}/api/visits",
+            "description": "تسجيل زيارة منتج. استبدل id بمعرف المنتج. اختياري: city, country, country_name."
+          }
+        }
+      ]
+    }
+  ]
+}
