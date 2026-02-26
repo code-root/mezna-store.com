@@ -69,7 +69,7 @@
         <div class="card">
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-hover table-centered table-nowrap mb-0">
+                    <table id="visits-table" class="table table-hover table-centered table-nowrap mb-0 w-100">
                         <thead class="table-light">
                             <tr>
                                 <th>النوع</th>
@@ -100,7 +100,7 @@
                                     <td><code>{{ $visit->ip_address ?? '—' }}</code></td>
                                     <td>{{ $visit->city ?? '—' }}</td>
                                     <td>{{ $visit->country_name ?? $visit->country ?? '—' }}</td>
-                                    <td>{{ $visit->created_at->format('Y-m-d H:i') }}</td>
+                                    <td data-order="{{ $visit->created_at->format('U') }}">{{ $visit->created_at->format('Y-m-d H:i') }}</td>
                                 </tr>
                             @empty
                                 <tr>
@@ -110,13 +110,43 @@
                         </tbody>
                     </table>
                 </div>
-                @if ($visits->hasPages())
-                    <div class="d-flex justify-content-center mt-3">
-                        {{ $visits->appends(request()->query())->links() }}
-                    </div>
-                @endif
             </div>
         </div>
     </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+$(document).ready(function() {
+    var $table = $('#visits-table');
+    if ($table.length && $table.find('tbody tr td[colspan]').length === 0) {
+        $table.DataTable({
+            order: [[5, 'desc']],
+            pageLength: 25,
+            lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, 'الكل']],
+            language: {
+                url: '//cdn.datatables.net/plug-ins/2.0.8/i18n/ar.json',
+                search: 'بحث:',
+                lengthMenu: 'عرض _MENU_ صف',
+                info: 'عرض _START_ إلى _END_ من _TOTAL_ زيارة',
+                infoEmpty: 'لا توجد زيارات',
+                infoFiltered: '(مصفى من _MAX_)',
+                paginate: {
+                    first: 'الأولى',
+                    last: 'الأخيرة',
+                    next: 'التالية',
+                    previous: 'السابقة'
+                },
+                zeroRecords: 'لا توجد زيارات مطابقة للبحث'
+            },
+            responsive: true,
+            dom: '<"row align-items-center mb-2"<"col-sm-12 col-md-6"l><"col-sm-12 col-md-6"f>>rtip',
+            drawCallback: function() {
+                $('.dataTables_info').addClass('text-muted');
+            }
+        });
+    }
+});
+</script>
+@endpush

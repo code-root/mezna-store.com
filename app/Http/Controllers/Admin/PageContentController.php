@@ -10,6 +10,14 @@ class PageContentController extends Controller
 {
     public const KEYS = ['shipping', 'returns', 'faq', 'meta_pixel_id', 'home'];
 
+    public static function socialKeys(): array
+    {
+        return [
+            'social_facebook', 'social_instagram', 'social_twitter', 'social_snapchat',
+            'social_whatsapp', 'social_tiktok', 'social_youtube',
+        ];
+    }
+
     public function index()
     {
         $items = [];
@@ -65,5 +73,35 @@ class PageContentController extends Controller
         );
         return redirect()->route('admin.page-contents.index')
             ->with('success', 'تم الحفظ بنجاح');
+    }
+
+    public function socialEdit()
+    {
+        $keys = self::socialKeys();
+        $items = PageContent::whereIn('key', $keys)->get()->keyBy('key');
+        $labels = [
+            'social_facebook' => 'فيسبوك',
+            'social_instagram' => 'انستغرام',
+            'social_twitter' => 'تويتر / X',
+            'social_snapchat' => 'سناب شات',
+            'social_whatsapp' => 'واتساب',
+            'social_tiktok' => 'تيك توك',
+            'social_youtube' => 'يوتيوب',
+        ];
+        return view('admin.page-contents.social-edit', compact('items', 'keys', 'labels'));
+    }
+
+    public function socialUpdate(Request $request)
+    {
+        $keys = self::socialKeys();
+        foreach ($keys as $key) {
+            $value = $request->input($key);
+            PageContent::updateOrCreate(
+                ['key' => $key],
+                ['content' => is_string($value) ? trim($value) : null]
+            );
+        }
+        return redirect()->route('admin.page-contents.social.edit')
+            ->with('success', 'تم حفظ حسابات التواصل الاجتماعي بنجاح');
     }
 }

@@ -6,6 +6,8 @@ use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\SettingsController;
 use App\Http\Controllers\Admin\ProductVariantController;
+use App\Http\Controllers\Admin\PageContentController;
+use App\Http\Controllers\Admin\VisitLogController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -87,13 +89,15 @@ Route::middleware(['auth'])->prefix('admin')->name('admin.')->group(function () 
     });
 
     // Visit logs (analytics)
-    Route::get('/visits', [\App\Http\Controllers\Admin\VisitLogController::class, 'index'])->name('visits.index');
+    Route::get('/visits', [VisitLogController::class, 'index'])->name('visits.index');
 
     // Page contents (Shipping, Returns, FAQ, Meta Pixel)
     Route::prefix('page-contents')->name('page-contents.')->group(function () {
-        Route::get('/', [\App\Http\Controllers\Admin\PageContentController::class, 'index'])->name('index');
-        Route::get('/{key}/edit', [\App\Http\Controllers\Admin\PageContentController::class, 'edit'])->name('edit');
-        Route::put('/{key}', [\App\Http\Controllers\Admin\PageContentController::class, 'update'])->name('update');
+        Route::get('/', [PageContentController::class, 'index'])->name('index');
+        Route::get('/social/edit', [PageContentController::class, 'socialEdit'])->name('social.edit');
+        Route::put('/social', [PageContentController::class, 'socialUpdate'])->name('social.update');
+        Route::get('/{key}/edit', [PageContentController::class, 'edit'])->name('edit');
+        Route::put('/{key}', [PageContentController::class, 'update'])->name('update');
     });
 
     // Hero slides (carousel at top)

@@ -248,6 +248,20 @@
       ]
     },
     {
+      "name": "Social Links (حسابات التواصل الاجتماعي)",
+      "item": [
+        {
+          "name": "Get Social Links - روابط التواصل",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Accept", "value": "application/json" }],
+            "url": "{{base_url}}/api/social-links",
+            "description": "يرجع روابط فيسبوك، انستغرام، تويتر، سناب شات، واتساب، تيك توك، يوتيوب. البيانات تُضبط من لوحة التحكم → محتوى الصفحات → حسابات التواصل الاجتماعي."
+          }
+        }
+      ]
+    },
+    {
       "name": "Visits (تسجيل الزيارات)",
       "item": [
         {

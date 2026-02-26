@@ -58,6 +58,15 @@
                     </div>
                 </div>
             </div>
+            <div class="col-md-6 col-lg-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">حسابات التواصل الاجتماعي</h5>
+                        <p class="text-muted small">فيسبوك، انستغرام، تويتر، واتساب...</p>
+                        <a href="{{ route('admin.page-contents.social.edit') }}" class="btn btn-sm btn-primary">تعديل الروابط</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

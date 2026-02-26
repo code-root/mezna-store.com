@@ -54,6 +54,9 @@ Route::name('api.')->group(function () {
   // Hero slides (carousel images - random order)
   Route::get('/hero-slides', [\App\Http\Controllers\Api\HeroSlideController::class, 'index'])->name('hero-slides.index');
 
+  // Social media links (حسابات التواصل الاجتماعي)
+  Route::get('/social-links', [\App\Http\Controllers\Api\SocialLinksController::class, 'index'])->name('social-links.index');
+
   // Record visit (category or product)
   Route::post('/visits', [ApiVisitController::class, 'store'])->name('visits.store');
 });
